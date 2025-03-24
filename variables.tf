@@ -32,12 +32,12 @@ variable "igw_tags" {
   default = {}
 }
 
-variable "public_subnet_cidr" {
+variable "public_subnet_cidrs" {
 
    type = list
    validation {
 
-     condition = length(var.public_subnet_cidr) ==2
+     condition = length(var.public_subnet_cidrs) ==2
      error_message = "must should have 2 cidr blocks"
 
    }
@@ -48,11 +48,11 @@ variable "public_subnet_tags" {
   default = {}
 }
 
-variable "private_subnet_cidr" {
+variable "private_subnet_cidrs" {
    type = list
    validation {
 
-     condition = length(var.private_subnet_cidr) ==2
+     condition = length(var.private_subnet_cidrs) == 2
      error_message = "must should have 2 cidr blocks" 
 
    }
@@ -62,11 +62,11 @@ variable "private_subnet_tags" {
   default = {}
 }
 
-variable "database_subnet_cidr" {
+variable "database_subnet_cidrs" {
    type = list
    validation {
 
-     condition = length(var.database_subnet_cidr) ==2
+     condition = length(var.database_subnet_cidrs) == 2
      error_message = "must should have 2 cidr blocks"
 
    }

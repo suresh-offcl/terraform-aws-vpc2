@@ -25,9 +25,9 @@ resource "aws_internet_gateway" "igw" {
 }
 
 resource "aws_subnet" "public" {
-  count = length(var.public_subnet_cidr)
+  count = length(var.public_subnet_cidrs)
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = var.public_subnet_cidr[count.index]
+  cidr_block              = var.public_subnet_cidrs[count.index]
   map_public_ip_on_launch = true
   availability_zone       = local.az_names[count.index]
 
@@ -41,9 +41,9 @@ resource "aws_subnet" "public" {
 }
 
 resource "aws_subnet" "private" {
-  count = length(var.private_subnet_cidr)
+  count = length(var.private_subnet_cidrs)
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = var.private_subnet_cidr[count.index]
+  cidr_block              = var.private_subnet_cidrs[count.index]
   availability_zone       = local.az_names[count.index]
 
   tags = merge(
@@ -56,9 +56,9 @@ resource "aws_subnet" "private" {
 }
 
 resource "aws_subnet" "database" {
-  count = length(var.database_subnet_cidr)
+  count = length(var.database_subnet_cidrs)
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = var.database_subnet_cidr[count.index]
+  cidr_block              = var.database_subnet_cidrs[count.index]
   availability_zone       = local.az_names[count.index]
 
   tags = merge(
@@ -149,7 +149,7 @@ resource "aws_route" "database" {
 
 resource "aws_route_table_association" "public" {
 
-  count = length(var.public_subnet_cidr)
+  count = length(var.public_subnet_cidrs)
   subnet_id      = aws_subnet.public[count.index].id 
   route_table_id = aws_route_table.public.id 
 
@@ -157,7 +157,7 @@ resource "aws_route_table_association" "public" {
 
 resource "aws_route_table_association" "private" {
 
-  count = length(var.private_subnet_cidr)
+  count = length(var.private_subnet_cidrs)
   subnet_id      = aws_subnet.private[count.index].id 
   route_table_id = aws_route_table.private.id 
   
@@ -165,7 +165,7 @@ resource "aws_route_table_association" "private" {
 
 resource "aws_route_table_association" "database" {
 
-  count = length(var.database_subnet_cidr)
+  count = length(var.database_subnet_cidrs)
   subnet_id      = aws_subnet.database[count.index].id 
   route_table_id = aws_route_table.database.id 
   
