@@ -1,15 +1,5 @@
 variable "vpc_cidr" {
-  default = "172.16.0.0/16"
-}
-
-variable "enable_dns_support" {
-  
-  default = true 
-
-}
-
-variable "enable_dns_hostnames" {
-  default = true
+  default = "10.0.0.0/16"
 }
 
 variable "common_tags" {
@@ -23,24 +13,39 @@ variable "vpc_tags" {
 variable "project_name" {
   
 }
-
 variable "environment" {
   
 }
 
 variable "igw_tags" {
-  default = {}
+  
+}
+variable "public_subnet_cidrs" {
+  type = list
+  validation {
+    condition = length(var.public_subnet_cidrs) == 2
+    error_message = "must have 2 cidr blocks"
+  }
+
 }
 
-variable "public_subnet_cidr" {
+variable "private_subnet_cidrs" {
+    type = list
 
-   type = list
-   validation {
+  validation {
+    condition = length(var.private_subnet_cidrs) == 2
+    error_message = "must have 2 cidr blocks"
+  }
 
-     condition = length(var.public_subnet_cidr) ==2
-     error_message = "must should have 2 cidr blocks"
+}
 
-   }
+variable "database_subnet_cidrs" {
+    type = list
+
+  validation {
+    condition = length(var.database_subnet_cidrs) == 2
+    error_message = "must have 2 cidr blocks"
+  }
 
 }
 
@@ -48,43 +53,30 @@ variable "public_subnet_tags" {
   default = {}
 }
 
-variable "private_subnet_cidr" {
-   type = list
-   validation {
-
-     condition = length(var.private_subnet_cidr) == 2
-     error_message = "must should have 2 cidr blocks" 
-
-   }
-}
-
 variable "private_subnet_tags" {
   default = {}
-}
-
-variable "database_subnet_cidr" {
-   type = list
-   validation {
-
-     condition = length(var.database_subnet_cidr) == 2
-     error_message = "must should have 2 cidr blocks"
-
-   }
 }
 
 variable "database_subnet_tags" {
   default = {}
 }
 
-variable "route_table_public_tags" {
+variable "aws_routeTable_publicTags" {
   default = {}
 }
 
-variable "route_table_private_tags" {
+variable "aws_routeTable_privateTags" {
+  default = {}
+}
+variable "aws_routeTable_databaseTags" {
   default = {}
 }
 
-variable "route_table_database_tags" {
+variable "eip_tags" {
+  default = {}
+}
+
+variable "db_group_tags" {
   default = {}
 }
 
