@@ -18,7 +18,7 @@ variable "environment" {
 }
 
 variable "igw_tags" {
-  
+  default = {}
 }
 variable "public_subnet_cidrs" {
   type = list
