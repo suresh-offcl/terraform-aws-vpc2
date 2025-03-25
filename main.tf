@@ -78,10 +78,9 @@ resource "aws_subnet" "database" {
 
 # Create an AWS DB Subnet Group for RDS
 resource "aws_db_subnet_group" "db_subnet_group" {
-  count = length(var.database_subnet_cidrs)
   name       = "db-subnet-group"
-  subnet_ids = aws_subnet.database[count.index].id  # Reference all database subnets
-
+  subnet_ids = aws_subnet.database[*].id  # Reference all database subnets
+  
   tags = merge(
     var.common_tags,
     var.db_subnet_group_tags,
@@ -115,26 +114,7 @@ resource "aws_nat_gateway" "nat" {
   )
 }
 
-resource "aws_route" "public" {
-  count = length(var.public_subnet_cidrs)
-  route_table_id         = aws_route_table.public[count.index].id
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.igw.id
-}
 
-resource "aws_route" "private" {
-  count = length(var.private_subnet_cidrs)
-  route_table_id         = aws_route_table.private[count.index].id
-  destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = aws_nat_gateway.nat.id
-}
-
-resource "aws_route" "database" {
-  count = length(var.database_subnet_cidrs)
-  route_table_id         = aws_route_table.database[count.index].id
-  destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = aws_nat_gateway.nat.id
-}
 # Create a public Route Table
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
@@ -160,6 +140,24 @@ resource "aws_route_table" "database" {
   tags = {
     Name = "database-route-table"
   }
+}
+
+resource "aws_route" "public" {
+  route_table_id         = aws_route_table.public.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.igw.id
+}
+
+resource "aws_route" "private" {
+  route_table_id         = aws_route_table.private.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.nat.id
+}
+
+resource "aws_route" "database" {
+  route_table_id         = aws_route_table.database.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.nat.id
 }
 
 # Associate Public Subnets with the Public Route Table
