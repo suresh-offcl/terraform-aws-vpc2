@@ -70,6 +70,3 @@ variable "is_peering_required" {
 variable "vpc_peering_tags" {
   default = {}
 }
-variable "vpc_id" {
-  
-}
